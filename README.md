@@ -42,3 +42,9 @@ md = to_markdown(
     ConvertOptions(include_headers=True, save_attachments=False, inline_images=True),
 )
 ```
+
+## License
+
+This project is licensed under the **MIT License**.
+
+**Note:** This project depends on `extract-msg`, which is licensed under **GPL-3.0**. Distribution of this project as a combined work may be subject to the terms of the GPL-3.0.
