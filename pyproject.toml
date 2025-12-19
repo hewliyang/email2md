@@ -1,7 +1,7 @@
 [project]
 name = "email2md"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.1.1"
+description = "Pure Python EML and MSG converter"
 readme = "README.md"
 authors = [{ name = "Li Yang", email = "hewliyang@u.nus.edu" }]
 requires-python = ">=3.10"

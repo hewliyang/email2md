@@ -165,9 +165,11 @@ def to_html(
     attachments: list[str] = []
 
     for part in msg.walk():
-        content_type = part.get_content_type()
-        content_id = part.get("Content-ID", "").strip("<>")
+        content_type = part.get_content_type().rstrip("\x00")
+        content_id = part.get("Content-ID", "").strip("<>").rstrip("\x00")
         filename = part.get_filename()
+        if filename:
+            filename = filename.rstrip("\x00")
 
         if content_type == "text/html":
             payload = part.get_payload(decode=True)
@@ -188,14 +190,11 @@ def to_html(
 
                 # Track non-image attachments for listing
                 if filename and not content_type.startswith("image/"):
-                    # Strip null bytes that may come from .msg files
-                    clean_filename = filename.rstrip("\x00")
-                    attachments.append(clean_filename)
+                    attachments.append(filename)
 
                 if options.save_attachments and filename:
                     output_dir.mkdir(parents=True, exist_ok=True)
-                    clean_filename = filename.rstrip("\x00")
-                    (output_dir / clean_filename).write_bytes(payload)
+                    (output_dir / filename).write_bytes(payload)
 
     # Fallback to plain text if no HTML
     if not html_content and plain_content and options.fallback_to_plain:
