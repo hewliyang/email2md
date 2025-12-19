@@ -14,13 +14,11 @@ __all__ = [
     "ConvertOptions",
     "to_html",
     "to_markdown",
-    "SUPPORTED_FORMATS",
     "DEFAULT_HEADERS",
 ]
 
 logger = logging.getLogger("email2md")
 
-SUPPORTED_FORMATS = {".eml", ".msg"}
 _MSG_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"
 HTML_TAGS = [
     "table",
@@ -49,7 +47,7 @@ HTML_TAGS = [
 ]
 
 
-DEFAULT_HEADERS = ("From", "To", "Subject", "Date")
+DEFAULT_HEADERS = ("From", "To", "Cc", "Bcc", "Subject", "Date")
 
 
 @dataclass
@@ -63,7 +61,7 @@ class ConvertOptions:
             saved attachment files (requires save_attachments=True).
         output_dir: Directory for saving attachments. Defaults to current dir.
         include_headers: Prepend email headers to output.
-        headers: Which headers to include. Defaults to From, To, Subject, Date.
+        headers: Which headers to include. Defaults to From, To, Cc, Bcc, Subject, Date.
         fallback_to_plain: Use plain text body if no HTML part exists.
         include_attachment_list: Include list of non-image attachments below headers.
         include_hrefs: Include href attributes in <a> tags. If False, strips hrefs.
