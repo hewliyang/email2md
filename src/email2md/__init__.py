@@ -65,6 +65,7 @@ class ConvertOptions:
         headers: Which headers to include. Defaults to From, To, Subject, Date.
         fallback_to_plain: Use plain text body if no HTML part exists.
         include_attachment_list: Include list of non-image attachments below headers.
+        include_hrefs: Include href attributes in <a> tags. If False, strips hrefs.
     """
 
     save_attachments: bool = False
@@ -75,6 +76,7 @@ class ConvertOptions:
     headers: tuple[str, ...] = DEFAULT_HEADERS
     fallback_to_plain: bool = True
     include_attachment_list: bool = True
+    include_hrefs: bool = True
 
     def __post_init__(self) -> None:
         if isinstance(self.output_dir, str):
@@ -240,6 +242,22 @@ def to_html(
             flags=re.IGNORECASE,
         )
         html_content = re.sub(r"cid:([^\"\'\s>]+)", replace_other_cid, html_content)
+
+    # Strip href attributes from <a> tags if requested
+    if not options.include_hrefs:
+        html_content = re.sub(
+            r'(<a\s[^>]*)href=["\'][^"\']*["\']([^>]*>)',
+            r"\1\2",
+            html_content,
+            flags=re.IGNORECASE,
+        )
+        # Also handle hrefs without quotes (though rare)
+        html_content = re.sub(
+            r"(<a\s[^>]*)href=[^\s>]+([^>]*>)",
+            r"\1\2",
+            html_content,
+            flags=re.IGNORECASE,
+        )
 
     # Prepend headers (and attachment list) if requested
     if options.include_headers:

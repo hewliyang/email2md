@@ -3,9 +3,7 @@ name = "email2md"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "Li Yang", email = "76434265+hewliyang@users.noreply.github.com" },
-]
+authors = [{ name = "Li Yang", email = "hewliyang@u.nus.edu" }]
 requires-python = ">=3.10"
 dependencies = ["extract-msg>=0.55.0", "markdownify>=0.13.1"]
 

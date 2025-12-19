@@ -22,8 +22,8 @@ Examples:
   # Pipe from stdin (format auto-detected)
   cat message.msg | email2md
 
-  # Minimal output (no headers, no images, no attachment list)
-  email2md message.eml --no-headers --no-images --no-attachment-list
+  # Minimal output (no headers, no images, no hrefs, no attachment list)
+  email2md message.eml --no-headers --no-images --no-hrefs --no-attachment-list
 
   # Save attachments and reference them (not inline base64)
   email2md message.eml --save-attachments --reference-images -o ./output
@@ -77,6 +77,12 @@ Examples:
     )
 
     parser.add_argument(
+        "--no-hrefs",
+        action="store_true",
+        help="Strip href attributes from <a> tags (keep link text only).",
+    )
+
+    parser.add_argument(
         "--no-headers",
         action="store_true",
         help="Do not prepend email headers.",
@@ -120,6 +126,7 @@ Examples:
             headers=tuple(args.header) if args.header else DEFAULT_HEADERS,
             fallback_to_plain=not args.no_fallback_plain,
             include_attachment_list=not args.no_attachment_list,
+            include_hrefs=not args.no_hrefs,
         )
     except ValueError as e:
         parser.error(str(e))
