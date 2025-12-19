@@ -1,0 +1,3 @@
+- Type check: `uv run ty check`
+- Format: `uv run ruff format`
+- Lint: `uv run ruff check`

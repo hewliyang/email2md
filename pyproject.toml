@@ -1,0 +1,32 @@
+[project]
+name = "email2md"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Li Yang", email = "76434265+hewliyang@users.noreply.github.com" },
+]
+requires-python = ">=3.10"
+dependencies = ["extract-msg>=0.55.0", "markdownify>=0.13.1"]
+
+[project.scripts]
+email2md = "email2md.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[dependency-groups]
+dev = ["ipykernel>=7.1.0", "rich>=14.2.0", "ruff>=0.14.10", "ty>=0.0.3"]
