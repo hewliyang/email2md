@@ -1,7 +1,8 @@
 """Tests for to_html() conversion function."""
 
+import email.message
 from pathlib import Path
-
+from typing import cast
 
 from email2md import ConvertOptions, to_html
 
@@ -155,8 +156,6 @@ class TestHtmlConversion:
 
     def test_multiple_images(self) -> None:
         """Should handle multiple inline images."""
-        import email.message
-
         msg = email.message.EmailMessage()
         msg["From"] = "test@example.com"
         msg["To"] = "recipient@example.com"
@@ -173,12 +172,9 @@ class TestHtmlConversion:
         img1 = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01"
         img2 = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x02"
 
-        msg.get_payload()[0].add_related(
-            img1, "image", "png", cid="img1", filename="1.png"
-        )
-        msg.get_payload()[0].add_related(
-            img2, "image", "png", cid="img2", filename="2.png"
-        )
+        payload = cast(list[email.message.EmailMessage], msg.get_payload())
+        payload[0].add_related(img1, "image", "png", cid="img1", filename="1.png")
+        payload[0].add_related(img2, "image", "png", cid="img2", filename="2.png")
 
         result = to_html(msg.as_bytes())
         assert "data:image/png;base64," in result

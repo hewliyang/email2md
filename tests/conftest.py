@@ -2,6 +2,7 @@
 
 import email.message
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -59,7 +60,8 @@ def eml_with_images() -> bytes:
 
     # Add inline image
     image_data = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01"
-    msg.get_payload()[0].add_related(
+    payload = cast(list[email.message.EmailMessage], msg.get_payload())
+    payload[0].add_related(
         image_data,
         maintype="image",
         subtype="png",

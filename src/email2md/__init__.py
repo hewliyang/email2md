@@ -5,6 +5,7 @@ from base64 import b64encode
 from dataclasses import dataclass, field
 from email import message_from_bytes
 from pathlib import Path
+from typing import cast
 
 import extract_msg
 import markdownify
@@ -71,7 +72,7 @@ class ConvertOptions:
     save_attachments: bool = False
     include_images: bool = True
     inline_images: bool = True
-    output_dir: Path = field(default_factory=Path.cwd)
+    output_dir: str | Path = field(default_factory=Path.cwd)
     include_headers: bool = True
     headers: tuple[str, ...] = DEFAULT_HEADERS
     fallback_to_plain: bool = True
@@ -80,7 +81,7 @@ class ConvertOptions:
 
     def __post_init__(self) -> None:
         if isinstance(self.output_dir, str):
-            self.output_dir = Path(self.output_dir)
+            object.__setattr__(self, "output_dir", Path(self.output_dir))
         if not self.inline_images and not self.save_attachments:
             raise ValueError(
                 "save_attachments must be True when inline_images is False "
@@ -152,6 +153,8 @@ def to_html(
     if options is None:
         options = ConvertOptions()
 
+    output_dir = cast(Path, options.output_dir)
+
     raw_bytes, suffix = _read_input(source)
     eml_bytes = _msg_to_eml(raw_bytes) if suffix == ".msg" else raw_bytes
     msg = message_from_bytes(eml_bytes)
@@ -190,9 +193,9 @@ def to_html(
                     attachments.append(clean_filename)
 
                 if options.save_attachments and filename:
-                    options.output_dir.mkdir(parents=True, exist_ok=True)
+                    output_dir.mkdir(parents=True, exist_ok=True)
                     clean_filename = filename.rstrip("\x00")
-                    (options.output_dir / clean_filename).write_bytes(payload)
+                    (output_dir / clean_filename).write_bytes(payload)
 
     # Fallback to plain text if no HTML
     if not html_content and plain_content and options.fallback_to_plain:
