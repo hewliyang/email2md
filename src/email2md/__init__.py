@@ -2,10 +2,9 @@ import logging
 import re
 import sys
 from base64 import b64encode
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from email import message_from_bytes
 from pathlib import Path
-from typing import cast
 
 import extract_msg
 import markdownify
@@ -59,7 +58,8 @@ class ConvertOptions:
         include_images: Include images in output. If False, images are stripped.
         inline_images: Embed images as base64 data URIs. If False, reference
             saved attachment files (requires save_attachments=True).
-        output_dir: Directory for saving attachments. Defaults to current dir.
+        output_dir: Directory for saving attachments. Defaults to input file directory
+            when source is a path, otherwise current directory (stdin/bytes).
         include_headers: Prepend email headers to output.
         headers: Which headers to include. Defaults to From, To, Cc, Bcc, Subject, Date.
         fallback_to_plain: Use plain text body if no HTML part exists.
@@ -70,7 +70,7 @@ class ConvertOptions:
     save_attachments: bool = False
     include_images: bool = True
     inline_images: bool = True
-    output_dir: str | Path = field(default_factory=Path.cwd)
+    output_dir: str | Path | None = None
     include_headers: bool = True
     headers: tuple[str, ...] = DEFAULT_HEADERS
     fallback_to_plain: bool = True
@@ -151,7 +151,18 @@ def to_html(
     if options is None:
         options = ConvertOptions()
 
-    output_dir = cast(Path, options.output_dir)
+    if options.output_dir is None:
+        output_dir = (
+            Path.cwd()
+            if source is None or isinstance(source, bytes)
+            else Path(source).parent
+        )
+    else:
+        output_dir = (
+            Path(options.output_dir)
+            if isinstance(options.output_dir, str)
+            else options.output_dir
+        )
 
     raw_bytes, suffix = _read_input(source)
     eml_bytes = _msg_to_eml(raw_bytes) if suffix == ".msg" else raw_bytes

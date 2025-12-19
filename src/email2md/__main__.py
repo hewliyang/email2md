@@ -51,8 +51,9 @@ Examples:
         "--output-dir",
         "-o",
         type=Path,
-        default=Path.cwd(),
-        help="Directory for saving attachments (default: current directory).",
+        default=None,
+        help="Directory for saving attachments (default: input file directory; "
+        "stdin/bytes default to current directory).",
     )
 
     parser.add_argument(

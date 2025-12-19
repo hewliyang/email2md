@@ -1,7 +1,10 @@
 """Tests for to_html() conversion function."""
 
 import email.message
+import io
+import sys
 from pathlib import Path
+from types import SimpleNamespace
 from typing import cast
 
 from email2md import ConvertOptions, to_html
@@ -81,6 +84,41 @@ class TestHtmlConversion:
         assert (tmp_path / "document.pdf").exists()
         content = (tmp_path / "document.pdf").read_bytes()
         assert content == b"Test document content"
+
+    def test_default_output_dir_uses_input_file_directory(
+        self, tmp_path: Path, eml_with_attachments: bytes
+    ) -> None:
+        eml_dir = tmp_path / "emails"
+        eml_dir.mkdir()
+        eml_file = eml_dir / "test.eml"
+        eml_file.write_bytes(eml_with_attachments)
+
+        opts = ConvertOptions(save_attachments=True, output_dir=None)
+        to_html(eml_file, opts)
+
+        assert (eml_dir / "document.pdf").exists()
+
+    def test_default_output_dir_stdin_uses_cwd(
+        self, monkeypatch, tmp_path: Path, eml_with_attachments: bytes
+    ) -> None:
+        monkeypatch.chdir(tmp_path)
+        fake_stdin = SimpleNamespace(buffer=io.BytesIO(eml_with_attachments))
+        monkeypatch.setattr(sys, "stdin", fake_stdin)
+
+        opts = ConvertOptions(save_attachments=True, output_dir=None)
+        to_html(None, opts)
+
+        assert (tmp_path / "document.pdf").exists()
+
+    def test_default_output_dir_bytes_uses_cwd(
+        self, monkeypatch, tmp_path: Path, eml_with_attachments: bytes
+    ) -> None:
+        monkeypatch.chdir(tmp_path)
+
+        opts = ConvertOptions(save_attachments=True, output_dir=None)
+        to_html(eml_with_attachments, opts)
+
+        assert (tmp_path / "document.pdf").exists()
 
     def test_attachment_list_included(self, eml_with_attachments: bytes) -> None:
         """Should list non-image attachments by default."""

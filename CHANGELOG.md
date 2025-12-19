@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2025-12-19
+
+### Changed
+
+- Changed default attachment `output_dir` behavior: when converting from a file path, attachments now save alongside the input email; when reading from stdin or bytes, attachments save to the current working directory.
+- Updated CLI `--output-dir/-o` default to follow the same behavior as the library (file directory vs current working directory).
+
 ## [0.1.2] - 2025-12-19
 
 ### Changed
@@ -41,7 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stdin/stdout support for piping
 - Fallback to plain text when HTML body is unavailable
 
-[Unreleased]: https://github.com/hewliyang/email2md/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/hewliyang/email2md/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/hewliyang/email2md/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/hewliyang/email2md/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hewliyang/email2md/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/hewliyang/email2md/releases/tag/v0.1.0
