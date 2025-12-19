@@ -1,10 +1,6 @@
 """Integration tests using real-world email fixtures."""
 
-from pathlib import Path
-
-import pytest
-
-from email2md import ConvertOptions, to_html, to_markdown
+from email2md import to_html, to_markdown
 
 
 class TestRealWorldFixtures:

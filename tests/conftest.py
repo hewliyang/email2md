@@ -79,7 +79,9 @@ def eml_with_attachments() -> bytes:
     msg["Subject"] = "Email with Attachments"
     msg["Date"] = "Mon, 1 Jan 2024 12:00:00 +0000"
 
-    msg.set_content("<html><body><p>Email with attachments</p></body></html>", subtype="html")
+    msg.set_content(
+        "<html><body><p>Email with attachments</p></body></html>", subtype="html"
+    )
 
     # Add non-image attachment
     msg.add_attachment(

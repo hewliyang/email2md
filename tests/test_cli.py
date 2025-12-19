@@ -155,9 +155,7 @@ class TestCLI:
         assert "**To:**" not in captured.out
         assert "**Date:**" not in captured.out
 
-    def test_cli_no_hrefs(
-        self, capsys, tmp_path: Path, eml_with_links: bytes
-    ) -> None:
+    def test_cli_no_hrefs(self, capsys, tmp_path: Path, eml_with_links: bytes) -> None:
         """Should strip hrefs with --no-hrefs."""
         eml_file = tmp_path / "test.eml"
         eml_file.write_bytes(eml_with_links)
