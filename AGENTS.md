@@ -1,3 +1,6 @@
 - Type check: `uv run ty check`
 - Format: `uv run ruff format`
 - Lint: `uv run ruff check`
+- Test: `uv run pytest`
+- Test with coverage: `uv run pytest --cov-report=term-missing`
+- Test specific file: `uv run pytest tests/test_cli.py -v`

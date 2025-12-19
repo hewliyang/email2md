@@ -10,7 +10,17 @@ wheels/
 .venv
 
 # Fixtures for local testing
-fixtures/
+.private_fixtures/
 
 # Notebooks
 dev.ipynb
+
+# Test artifacts
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.cover
+.hypothesis/
+.tox/
+
